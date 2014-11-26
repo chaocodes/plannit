@@ -2,6 +2,7 @@ package com.chaocodes.plannit.model;
 
 public class Event extends Model
 {
+	private int id;
 	private String name;
 	private int year;
 	private int month;
@@ -11,11 +12,25 @@ public class Event extends Model
 	public Event() {}
 
 	public Event(String name, int year, int month, int day, String time) {
+		id = 0;
 		this.name = name;
 		this.year = year;
 		this.month = month;
 		this.day = day;
 		this.time = time;
+	}
+
+	public Event(int id, String name, int year, int month, int day, String time) {
+		this(name, year, month, day, time);
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -60,6 +75,6 @@ public class Event extends Model
 
 	@Override
 	public String toString() {
-		return name + " year: " + year + " month: " + month + " day: " + day + " time: " + time;
+		return "id: " + id + " name: " + name + " year: " + year + " month: " + month + " day: " + day + " time: " + time;
 	}
 }

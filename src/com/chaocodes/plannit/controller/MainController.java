@@ -27,8 +27,13 @@ public class MainController extends Controller implements ActionListener
 		modifyEventController = new ModifyEventController(new EventTestRepository(), new ModifyEventView());
 	}
 
+	private void initialControllers() {
+		modifyEventController.initial();
+	}
+
 	private void initialViewSetup() {
 		view.initial();
+		monthController.setModifyEventController(modifyEventController);
 		monthController.initial();
 		view.setCurrentView(monthController.getView());
 		view.update();
@@ -40,10 +45,6 @@ public class MainController extends Controller implements ActionListener
 		view.getAddEvent().addActionListener(this);
 	}
 
-	private void initialControllers() {
-		modifyEventController.initial();
-	}
-
 	private void initialFrameSettings() {
 		view.getWrapper().setTitle("Plannit - Month View");
 		view.getWrapper().setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,14 +53,14 @@ public class MainController extends Controller implements ActionListener
 	}
 
 	public void initial() {
+		initialControllers();
 		initialViewSetup();
 		initialViewButtons();
-		initialControllers();
 		initialFrameSettings();
 	}
 
 	public void addEvent() {
-		modifyEventController.showView();
+		modifyEventController.showAddView();
 	}
 
 	@Override

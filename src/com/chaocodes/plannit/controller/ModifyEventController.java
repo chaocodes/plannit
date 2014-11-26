@@ -2,21 +2,25 @@ package com.chaocodes.plannit.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 import com.chaocodes.plannit.model.Event;
 import com.chaocodes.plannit.repository.EventRepository;
 import com.chaocodes.plannit.utils.CalendarUtils;
 import com.chaocodes.plannit.view.ModifyEventView;
 
-public class ModifyEventController extends Controller implements ActionListener
+public class ModifyEventController extends Controller implements ActionListener, MouseListener
 {
 	private EventRepository repository;
 	private ModifyEventView view; // Use dedicated view? Or keep spawning new view?
 	private enum actions {
 		ADDEVENT,
 		EDITEVENT,
+		DELETEEVENT,
 		CHANGEDATE,
 	}
 
@@ -52,8 +56,18 @@ public class ModifyEventController extends Controller implements ActionListener
 		view.refresh();
 	}
 
-	public void showView() {
+	public void showAddView() {
+		view.setEvent(null);
+		view.update();
 		view.getWrapper().setTitle("Add Event");
+		view.getWrapper().pack();
+		view.getWrapper().setVisible(true);
+	}
+
+	public void showEditView(Event event) {
+		view.setEvent(event);
+		view.update();
+		view.getWrapper().setTitle("Edit Event");
 		view.getWrapper().pack();
 		view.getWrapper().setVisible(true);
 	}
@@ -62,20 +76,26 @@ public class ModifyEventController extends Controller implements ActionListener
 		return view;
 	}
 
+	private Event getViewEvent() {
+		String name = view.getName().getText();
+		int year = Integer.parseInt((String)view.getYear().getSelectedItem());
+		int month = view.getMonth().getSelectedIndex();
+		int day = view.getDay().getSelectedIndex() + 1;
+		String time = view.getTime().getText();
+		Event event = new Event(name, year, month, day, time);
+		return event;
+	}
+
 	private void addEvent() {
-		if (view.getName() != null) {
-			String name = view.getName().getText();
-			int year = Integer.parseInt((String)view.getYear().getSelectedItem());
-			int month = view.getMonth().getSelectedIndex();
-			int day = view.getDay().getSelectedIndex() + 1;
-			String time = view.getTime().getText();
-			Event event = new Event(name, year, month, day, time);
-			repository.create(event);
-		}
+		repository.create(getViewEvent());
 	}
 
 	private void editEvent() {
+		repository.update(0, getViewEvent());
+	}
 
+	private void deleteEvent() {
+		repository.delete(0);
 	}
 
 	private void changeDate() {
@@ -103,10 +123,32 @@ public class ModifyEventController extends Controller implements ActionListener
 			addEvent();
 		} else if (command == actions.EDITEVENT.name()) {
 			editEvent();
+		} else if (command == actions.DELETEEVENT.name()) {
+			deleteEvent();
 		} else if (command == actions.CHANGEDATE.name()) {
 			changeDate();
 		} else {
 			//
 		}
 	}
+
+	@Override
+	public void mouseClicked(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			int id = Integer.parseInt(((JTextArea)event.getSource()).getName());
+			showEditView((Event)repository.read(id));
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent event) {}
+
+	@Override
+	public void mouseExited(MouseEvent event) {}
+
+	@Override
+	public void mousePressed(MouseEvent event) {}
+
+	@Override
+	public void mouseReleased(MouseEvent event) {}
 }

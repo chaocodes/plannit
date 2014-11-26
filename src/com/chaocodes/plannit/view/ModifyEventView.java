@@ -11,12 +11,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.chaocodes.plannit.model.Event;
 import com.chaocodes.plannit.utils.CalendarUtils;
 
 public class ModifyEventView implements View
 {
 	JDialog wrapper;
 	JPanel container;
+
+	Event event;
 
 	JTextField name;
 	JComboBox<String> year;
@@ -98,9 +101,6 @@ public class ModifyEventView implements View
 		container.add(time);
 		addEvent = createEventButton("Add Event");
 		editEvent = createEventButton("Edit Event");
-		editEvent.setVisible(false);
-		container.add(addEvent);
-		container.add(editEvent);
 	}
 
 	@Override
@@ -112,12 +112,23 @@ public class ModifyEventView implements View
 
 	@Override
 	public void update() {
-
+		if (event == null) { // Add event view
+			container.remove(editEvent);
+			container.add(addEvent);
+		} else {
+			name.setText(event.getName());;
+			year.setSelectedItem("" + event.getYear());
+			month.setSelectedIndex(event.getMonth());
+			day.setSelectedIndex(event.getDay() - 1);
+			time.setText(event.getTime());
+			container.remove(addEvent);
+			container.add(editEvent);
+		}
 	}
 
 	@Override
 	public void refresh() {
-
+		//
 	}
 
 	public JDialog getWrapper() {
@@ -127,6 +138,14 @@ public class ModifyEventView implements View
 	@Override
 	public JPanel getContainer() {
 		return container;
+	}
+
+	public Event getEvent() {
+		return event;
+	}
+
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
 	public JTextField getName() {
