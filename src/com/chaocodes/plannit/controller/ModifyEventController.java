@@ -91,11 +91,11 @@ public class ModifyEventController extends Controller implements ActionListener,
 	}
 
 	private void editEvent() {
-		repository.update(0, getViewEvent());
+		repository.update(view.getEvent().getId(), getViewEvent());
 	}
 
 	private void deleteEvent() {
-		repository.delete(0);
+		repository.delete(view.getEvent().getId());
 	}
 
 	private void changeDate() {

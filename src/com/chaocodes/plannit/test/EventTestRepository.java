@@ -20,7 +20,7 @@ public class EventTestRepository extends EventRepository
 	public Model read(int id) {
 		int month = (int)(Math.random() * 11);
 		int day = (int)(Math.random() * 28);
-		return new Event("Event id:" + id, 2014, month, day, "2:00");
+		return new Event(id, "Event id:" + id, 2014, month, day, "2:00");
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class EventTestRepository extends EventRepository
 
 	@Override
 	public void update(int id, Model model) {
-		System.out.println("Model Updated: " + model);
+		System.out.println("Model id: " + id + " Updated: " + model);
 	}
 
 	@Override
