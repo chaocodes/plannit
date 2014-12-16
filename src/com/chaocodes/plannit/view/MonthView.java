@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import com.chaocodes.plannit.model.Event;
-import com.chaocodes.plannit.utils.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtils;
 
 public class MonthView implements View
 {

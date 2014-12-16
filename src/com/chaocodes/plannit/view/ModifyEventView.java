@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.chaocodes.plannit.utils.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtils;
 
 public class ModifyEventView implements View
 {

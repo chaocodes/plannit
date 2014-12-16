@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 import com.chaocodes.plannit.model.Event;
 import com.chaocodes.plannit.repository.EventRepository;
-import com.chaocodes.plannit.utils.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtils;
 import com.chaocodes.plannit.view.ModifyEventView;
 
 public class ModifyEventController extends Controller implements ActionListener

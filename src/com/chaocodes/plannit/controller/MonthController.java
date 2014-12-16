@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.chaocodes.plannit.repository.EventRepository;
-import com.chaocodes.plannit.utils.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtils;
 import com.chaocodes.plannit.view.MonthView;
 
 public class MonthController extends Controller implements ActionListener

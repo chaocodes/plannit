@@ -1,4 +1,4 @@
-package com.chaocodes.plannit.utils;
+package com.chaocodes.plannit.util;
 
 import java.util.Calendar;
 
