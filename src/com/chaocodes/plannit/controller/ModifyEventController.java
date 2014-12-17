@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 
 import com.chaocodes.plannit.model.Event;
 import com.chaocodes.plannit.repository.EventRepository;
-import com.chaocodes.plannit.util.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtil;
 import com.chaocodes.plannit.view.ModifyEventView;
 
 public class ModifyEventController extends Controller implements ActionListener
@@ -81,7 +81,7 @@ public class ModifyEventController extends Controller implements ActionListener
 	private void changeDate() {
 		int year = Integer.parseInt((String)view.getYear().getSelectedItem());
 		int month = view.getMonth().getSelectedIndex();
-		int maxDays = CalendarUtils.checkMaxDays(year, month);
+		int maxDays = CalendarUtil.checkMaxDays(year, month);
 		int currentDays = view.getDay().getItemCount();
 		if (currentDays > maxDays) {
 			for (int i = currentDays; i > maxDays; i--) {

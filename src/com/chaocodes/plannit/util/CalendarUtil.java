@@ -2,7 +2,7 @@ package com.chaocodes.plannit.util;
 
 import java.util.Calendar;
 
-public final class CalendarUtils
+public final class CalendarUtil
 {
 	public static String[] dayNames = {
 		"Sunday",
@@ -114,5 +114,5 @@ public final class CalendarUtils
 		return maxDays;
 	}
 
-	private CalendarUtils() {}
+	private CalendarUtil() {}
 }

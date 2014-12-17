@@ -14,7 +14,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 import com.chaocodes.plannit.model.Event;
-import com.chaocodes.plannit.util.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtil;
 
 public class MonthView implements View
 {
@@ -62,7 +62,7 @@ public class MonthView implements View
 	}
 
 	private JLabel createDayName(int i) {
-		JLabel dayName = new JLabel(CalendarUtils.dayNames[i]);
+		JLabel dayName = new JLabel(CalendarUtil.dayNames[i]);
 		dayName.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		return dayName;
 	}
@@ -106,7 +106,7 @@ public class MonthView implements View
 	}
 
 	private void updateHeader() {
-		monthName.setText(CalendarUtils.monthNames[month] + " " + year);
+		monthName.setText(CalendarUtil.monthNames[month] + " " + year);
 	}
 
 	private JPanel createBox() {

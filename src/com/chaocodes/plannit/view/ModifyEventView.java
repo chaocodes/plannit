@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.chaocodes.plannit.util.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtil;
 
 public class ModifyEventView implements View
 {
@@ -63,7 +63,7 @@ public class ModifyEventView implements View
 
 	private String[] createSelectorYears() {
 		String[] years = new String[30];
-		int year = CalendarUtils.getTodayYear();
+		int year = CalendarUtil.getTodayYear();
 		for (int i = 0; i < 30; i++) {
 			years[i] = Integer.toString(year);
 			year++;
@@ -87,11 +87,11 @@ public class ModifyEventView implements View
 		year = createSelector(createSelectorYears());
 		container.add(year);
 		container.add(createLabel("Month"));
-		month = createSelector(CalendarUtils.monthNames);
-		month.setSelectedIndex(CalendarUtils.getTodayMonth());
+		month = createSelector(CalendarUtil.monthNames);
+		month.setSelectedIndex(CalendarUtil.getTodayMonth());
 		container.add(month);
 		container.add(createLabel("Day"));
-		day = createSelector(createSelectorDays(CalendarUtils.getMaxDays()));
+		day = createSelector(createSelectorDays(CalendarUtil.getMaxDays()));
 		container.add(day);
 		container.add(createLabel("Time"));
 		time = createField();

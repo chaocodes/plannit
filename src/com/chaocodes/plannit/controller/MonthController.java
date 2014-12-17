@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import com.chaocodes.plannit.repository.EventRepository;
-import com.chaocodes.plannit.util.CalendarUtils;
+import com.chaocodes.plannit.util.CalendarUtil;
 import com.chaocodes.plannit.view.MonthView;
 
 public class MonthController extends Controller implements ActionListener
@@ -39,11 +39,11 @@ public class MonthController extends Controller implements ActionListener
 	}
 
 	private void updateView() {
-		view.setYear(CalendarUtils.getYear());
-		view.setMonth(CalendarUtils.getMonth());
-		view.setDay(CalendarUtils.getDayOfMonth());
-		view.setStartDate(CalendarUtils.getStartDate());
-		view.setMaxDays(CalendarUtils.getMaxDays());
+		view.setYear(CalendarUtil.getYear());
+		view.setMonth(CalendarUtil.getMonth());
+		view.setDay(CalendarUtil.getDayOfMonth());
+		view.setStartDate(CalendarUtil.getStartDate());
+		view.setMaxDays(CalendarUtil.getMaxDays());
 		view.setEvents(repository.readByMonthYear(view.getMonth(), view.getYear()));
 		view.update();
 		view.refresh();
@@ -54,12 +54,12 @@ public class MonthController extends Controller implements ActionListener
 	}
 
 	private void previousMonth() {
-		CalendarUtils.addMonth(-1);
+		CalendarUtil.addMonth(-1);
 		updateView();
 	}
 
 	private void nextMonth() {
-		CalendarUtils.addMonth(1);
+		CalendarUtil.addMonth(1);
 		updateView();
 	}
 
