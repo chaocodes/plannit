@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -32,7 +33,8 @@ public class MonthView implements View
 	private int maxDays;
 
 	private JPanel[] days;
-	private List<Event> events;
+	private List<Event> events; // Change to hashmap by name??
+	private List<JTextArea> eventTexts;
 
 	private JButton previousMonth;
 	private JButton nextMonth;
@@ -91,6 +93,7 @@ public class MonthView implements View
 	}
 
 	private void initialDays() {
+		eventTexts = new ArrayList<JTextArea>();
 		days = new JPanel[31];
 		for (int i = 0; i < days.length; i++) {
 			days[i] = createDay();
@@ -156,12 +159,16 @@ public class MonthView implements View
 	}
 
 	private void updateEvents() {
+		eventTexts.clear();
 		for (int i = 0; i < days.length; i++) {
 			days[i].removeAll();
 			days[i].add(createDayNumber(i), BorderLayout.NORTH);
 			for (Event event : events) {
 				if (event.getDay() == (i + 1)) {
-					days[i].add(createEvent(event), BorderLayout.CENTER);
+					JTextArea eventText = createEvent(event);
+					eventText.setName("" + event.getId()); // set name to model id for easy retrieval
+					eventTexts.add(eventText);
+					days[i].add(eventText, BorderLayout.CENTER);
 				}
 			}
 		}
@@ -267,6 +274,10 @@ public class MonthView implements View
 
 	public void setEvents(List<Event> events) {
 		this.events = events;
+	}
+
+	public List<JTextArea> getEventTexts() {
+		return eventTexts;
 	}
 
 	public JButton getPreviousMonth() {

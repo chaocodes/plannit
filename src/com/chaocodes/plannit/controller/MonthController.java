@@ -2,6 +2,9 @@ package com.chaocodes.plannit.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+
+import javax.swing.JTextArea;
 
 import com.chaocodes.plannit.repository.EventRepository;
 import com.chaocodes.plannit.util.CalendarUtil;
@@ -15,6 +18,8 @@ public class MonthController extends Controller implements ActionListener
 		PREVIOUSMONTH,
 		NEXTMONTH,
 	}
+
+	private ModifyEventController modifyEventController;
 
 	public MonthController(EventRepository repository, MonthView view) {
 		this.repository = repository;
@@ -38,6 +43,13 @@ public class MonthController extends Controller implements ActionListener
 		initialViewButtons();
 	}
 
+	private void updateEditListener() {
+		List<JTextArea> eventTexts = view.getEventTexts();
+		for (int i = 0; i < eventTexts.size(); i++) {
+			eventTexts.get(i).addMouseListener(modifyEventController);
+		}
+	}
+
 	private void updateView() {
 		view.setYear(CalendarUtil.getYear());
 		view.setMonth(CalendarUtil.getMonth());
@@ -47,10 +59,19 @@ public class MonthController extends Controller implements ActionListener
 		view.setEvents(repository.readByMonthYear(view.getMonth(), view.getYear()));
 		view.update();
 		view.refresh();
+		updateEditListener();
 	}
 
 	public MonthView getView() {
 		return view;
+	}
+
+	public ModifyEventController getModifyEventController() {
+		return modifyEventController;
+	}
+
+	public void setModifyEventController(ModifyEventController modifyEventController) {
+		this.modifyEventController = modifyEventController;
 	}
 
 	private void previousMonth() {
