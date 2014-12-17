@@ -28,7 +28,9 @@ public class ModifyEventView implements View
 	JTextField time;
 
 	JButton addEvent;
+	JPanel editWrapper;
 	JButton editEvent;
+	JButton deleteEvent;
 
 	public ModifyEventView() {}
 
@@ -59,6 +61,12 @@ public class ModifyEventView implements View
 		return selector;
 	}
 
+	private JPanel createButtonWrapper() {
+		JPanel wrapper = new JPanel();
+		wrapper.setLayout(new GridLayout(0, 2));
+		return wrapper;
+	}
+
 	private JButton createEventButton(String text) {
 		JButton button = new JButton(text);
 		return button;
@@ -82,6 +90,15 @@ public class ModifyEventView implements View
 		return days;
 	}
 
+	private void initialButtons() {
+		addEvent = createEventButton("Add Event");
+		editEvent = createEventButton("Edit Event");
+		deleteEvent = createEventButton("Delete Event");
+		editWrapper = createButtonWrapper();
+		editWrapper.add(editEvent);
+		editWrapper.add(deleteEvent);
+	}
+
 	private void initialComponents() {
 		container.add(createLabel("Name"));
 		name = createField();
@@ -99,8 +116,7 @@ public class ModifyEventView implements View
 		container.add(createLabel("Time"));
 		time = createField();
 		container.add(time);
-		addEvent = createEventButton("Add Event");
-		editEvent = createEventButton("Edit Event");
+		initialButtons();
 	}
 
 	@Override
@@ -113,7 +129,7 @@ public class ModifyEventView implements View
 	@Override
 	public void update() {
 		if (event == null) { // Add event view
-			container.remove(editEvent);
+			container.remove(editWrapper);
 			container.add(addEvent);
 		} else {
 			name.setText(event.getName());;
@@ -122,7 +138,7 @@ public class ModifyEventView implements View
 			day.setSelectedIndex(event.getDay() - 1);
 			time.setText(event.getTime());
 			container.remove(addEvent);
-			container.add(editEvent);
+			container.add(editWrapper);
 		}
 	}
 
@@ -172,7 +188,15 @@ public class ModifyEventView implements View
 		return addEvent;
 	}
 
+	public JPanel getEditWrapper() {
+		return editWrapper;
+	}
+
 	public JButton getEditEvent() {
 		return editEvent;
+	}
+
+	public JButton getDeleteEvent() {
+		return deleteEvent;
 	}
 }

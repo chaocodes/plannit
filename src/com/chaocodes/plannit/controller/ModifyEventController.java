@@ -40,6 +40,8 @@ public class ModifyEventController extends Controller implements ActionListener,
 		view.getAddEvent().addActionListener(this);
 		view.getEditEvent().setActionCommand(actions.EDITEVENT.name());
 		view.getEditEvent().addActionListener(this);
+		view.getDeleteEvent().setActionCommand(actions.DELETEEVENT.name());
+		view.getDeleteEvent().addActionListener(this);
 		view.getYear().setActionCommand(actions.CHANGEDATE.name());
 		view.getYear().addActionListener(this);
 		view.getMonth().setActionCommand(actions.CHANGEDATE.name());
