@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.chaocodes.plannit.model.Event;
-import com.chaocodes.plannit.utils.CalendarUtil;
+import com.chaocodes.plannit.util.CalendarUtil;
 
 public class ModifyEventView implements View
 {
