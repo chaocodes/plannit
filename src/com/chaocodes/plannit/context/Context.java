@@ -1,3 +1,5 @@
 package com.chaocodes.plannit.context;
 
-public class Context {}
+public interface Context
+{
+}
