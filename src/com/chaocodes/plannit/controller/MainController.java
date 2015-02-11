@@ -5,7 +5,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
-import com.chaocodes.plannit.test.EventTestRepository;
+import com.chaocodes.plannit.context.SQLiteContext;
+import com.chaocodes.plannit.repository.EventRepository;
 import com.chaocodes.plannit.view.ModifyEventView;
 import com.chaocodes.plannit.view.MonthView;
 import com.chaocodes.plannit.view.PlannitView;
@@ -23,8 +24,9 @@ public class MainController extends Controller implements ActionListener
 
 	public MainController() {
 		view = new PlannitView();
-		monthController = new MonthController(new EventTestRepository(), new MonthView());
-		modifyEventController = new ModifyEventController(new EventTestRepository(), new ModifyEventView());
+		EventRepository repo = new EventRepository(new SQLiteContext("plannit.db"));
+		monthController = new MonthController(repo, new MonthView());
+		modifyEventController = new ModifyEventController(repo, new ModifyEventView());
 	}
 
 	private void initialControllers() {
