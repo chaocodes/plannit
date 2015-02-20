@@ -1,45 +1,54 @@
 package com.chaocodes.plannit.context;
 
-import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
-import com.almworks.sqlite4java.SQLiteConnection;
-import com.almworks.sqlite4java.SQLiteException;
-import com.almworks.sqlite4java.SQLiteStatement;
 import com.chaocodes.plannit.model.Event;
 
 public class SQLiteContext implements Context
 {
-	private SQLiteConnection db;
+	private Connection db;
 
 	public SQLiteContext(String file) {
 		try {
-			db = new SQLiteConnection(new File(file));
-			db.open(true);
+			Class.forName("org.sqlite.JDBC");
+			db = DriverManager.getConnection("jdbc:sqlite:" + file);
 			createTables();
-		} catch (SQLiteException e) {
-			db.dispose();
-			//TODO end program
+		} catch (Exception e) {
+			handleException(e);
 		}
 	}
 
-	private void handleException(SQLiteException e) {
+	private void handleException(Exception e) {
 		e.printStackTrace();
+		close();
 		//TODO
 	}
 
+	private void cleanUpStatements(Statement st, ResultSet rs) {
+		try { if (rs != null) rs.close(); } catch (Exception e) {};
+		try { if (st != null) st.close(); } catch (Exception e) {};
+	}
+
 	private void createEventTable() {
-		SQLiteStatement st = null;
+		Statement st = null;
 		try {
-			st = db.prepare("CREATE TABLE if NOT EXISTS events" +
-					"(name varchar(255), year int, month int, day int, time varchar(100))");
-			st.step();
-		} catch (SQLiteException e) {
+			st = db.createStatement();
+			st.executeUpdate("CREATE TABLE if NOT EXISTS events" +
+					"(name varchar(255)," +
+					"year int, month int," +
+					"day int, " +
+					"time varchar(100))");
+			st.close();
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, null);
 		}
 	}
 
@@ -48,168 +57,168 @@ public class SQLiteContext implements Context
 		createEventTable();
 	}
 
-	public Event extractEvent(SQLiteStatement st) throws SQLiteException {
-		return new Event(st.columnInt(0), st.columnString(1), st.columnInt(2), st.columnInt(3), st.columnInt(4), st.columnString(5));
+	public Event extractEvent(ResultSet rs) throws Exception {
+		return new Event(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5), rs.getString(6));
 	}
 
 	@Override
 	public Event getEventById(int i) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		Event event = null;
 		try {
-			st = db.prepare("SELECT rowid,* FROM events WHERE rowid = ?");
-			st.bind(1, i);
-			while (st.step()) {
-				event = extractEvent(st);
+			st = db.prepareStatement("SELECT rowid,* FROM events WHERE rowid = ?");
+			st.setInt(1, i);
+			rs = st.executeQuery();
+			while (rs.next()) {
+				event = extractEvent(rs);
 			}
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, rs);
 		}
 		return event;
 	}
 
 	@Override
 	public ArrayList<Event> getEvents() {
-		SQLiteStatement st = null;
+		Statement st = null;
+		ResultSet rs = null;
 		ArrayList<Event> events = new ArrayList<Event>();
 		try {
-			st = db.prepare("SELECT rowid,* FROM events");
-			while (st.step()) {
-				events.add(extractEvent(st));
+			st = db.createStatement();
+			rs = st.executeQuery("SELECT rowid,* FROM events");
+			while (rs.next()) {
+				events.add(extractEvent(rs));
 			}
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, rs);
 		}
 		return events;
 	}
 
 	@Override
 	public ArrayList<Event> getEventsByYear(int year) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		ArrayList<Event> events = new ArrayList<Event>();
 		try {
-			st = db.prepare("SELECT rowid,* FROM events WHERE year = ?");
-			st.bind(1, year);
-			while (st.step()) {
-				events.add(extractEvent(st));
+			st = db.prepareStatement("SELECT rowid,* FROM events WHERE year = ?");
+			st.setInt(1, year);
+			rs = st.executeQuery();
+			while (rs.next()) {
+				events.add(extractEvent(rs));
 			}
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			st.dispose();
+			cleanUpStatements(st, rs);
 		}
 		return events;
 	}
 
 	@Override
 	public ArrayList<Event> getEventsByMonthYear(int month, int year) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		ArrayList<Event> events = new ArrayList<Event>();
 		try {
-			st = db.prepare("SELECT rowid,* FROM events WHERE month = ? AND year = ?");
-			st.bind(1, month);
-			st.bind(2, year);
-			while (st.step()) {
-				events.add(extractEvent(st));
+			st = db.prepareStatement("SELECT rowid,* FROM events WHERE month = ? AND year = ?");
+			st.setInt(1, month);
+			st.setInt(2, year);
+			rs = st.executeQuery();
+			while (rs.next()) {
+				events.add(extractEvent(rs));
 			}
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, rs);
 		}
 		return events;
 	}
 
 	@Override
 	public ArrayList<Event> getEventsByDayMonthYear(int day, int month, int year) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
 		ArrayList<Event> events = new ArrayList<Event>();
 		try {
-			st = db.prepare("SELECT rowid,* FROM events WHERE day = ? AND month = ? AND year = ?");
-			st.bind(1, day);
-			st.bind(2, month);
-			st.bind(3, year);
-			while (st.step()) {
-				events.add(extractEvent(st));
+			st = db.prepareStatement("SELECT rowid,* FROM events WHERE day = ? AND month = ? AND year = ?");
+			st.setInt(1, day);
+			st.setInt(2, month);
+			st.setInt(3, year);
+			rs = st.executeQuery();
+			while (rs.next()) {
+				events.add(extractEvent(rs));
 			}
-		} catch (SQLiteException e) {
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, rs);
 		}
 		return events;
 	}
 
 	@Override
 	public void insertEvent(String name, int year, int month, int day, String time) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
 		try {
-			st = db.prepare("INSERT INTO events (name, year, month, day, time) VALUES(?, ?, ?, ?, ?)");
-			st.bind(1, name);
-			st.bind(2, year);
-			st.bind(3, month);
-			st.bind(4, day);
-			st.bind(5, time);
-			st.step();
-		} catch (SQLiteException e) {
+			st = db.prepareStatement("INSERT INTO events (name, year, month, day, time) VALUES(?, ?, ?, ?, ?)");
+			st.setString(1, name);
+			st.setInt(2, year);
+			st.setInt(3, month);
+			st.setInt(4, day);
+			st.setString(5, time);
+			st.executeUpdate();
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, null);
 		}
 	}
 
 	@Override
 	public void updateEvent(int i, String name, int year, int month, int day, String time) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
 		try {
-			st = db.prepare("UPDATE events SET name = ?, year = ?, month = ?, day = ?, time = ? WHERE rowid = ?");
-			st.bind(1, name);
-			st.bind(2, year);
-			st.bind(3, month);
-			st.bind(4, day);
-			st.bind(5, time);
-			st.bind(6, i);
-			st.step();
-		} catch (SQLiteException e) {
+			st = db.prepareStatement("UPDATE events SET name = ?, year = ?, month = ?, day = ?, time = ? WHERE rowid = ?");
+			st.setString(1, name);
+			st.setInt(2, year);
+			st.setInt(3, month);
+			st.setInt(4, day);
+			st.setString(5, time);
+			st.setInt(6, i);
+			st.executeUpdate();
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, null);
 		}
 	}
 
 	@Override
 	public void deleteEvent(int i) {
-		SQLiteStatement st = null;
+		PreparedStatement st = null;
 		try {
-			st = db.prepare("DELETE FROM events WHERE rowid = ?");
-			st.bind(1, i);
-			st.step();
-		} catch (SQLiteException e) {
+			st = db.prepareStatement("DELETE FROM events WHERE rowid = ?");
+			st.setInt(1, i);
+			st.executeUpdate();
+		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			if (st != null) {
-				st.dispose();
-			}
+			cleanUpStatements(st, null);
 		}
 	}
 
 	public void close() {
-		db.dispose();
+		try {
+			db.close();
+		} catch (SQLException e1) {
+			System.exit(0);
+		}
 	}
 }

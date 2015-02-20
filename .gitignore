@@ -14,5 +14,5 @@ hs_err_pid*
 # Database Files
 *.db
 
-# Lib Files
-lib/*
+# Maven Build
+/target/
